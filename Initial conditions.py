@@ -41,10 +41,6 @@ def plot_profiles(x, times, thetas, title_prefix="", save_path=None, show=False)
 #inimation of solution
 def animate_solution(x, times, thetas, title="Animation",
                      save_path=None, show=False):
-    """
-    Creates an animation of theta(x,t) over stored times.
-    If save_path is given, saves as GIF/MP4 depending on extension.
-    """
     fig, ax = plt.subplots(figsize=(8, 5))
     line, = ax.plot([], [], lw=2)
     ax.set_xlim(x[0], x[-1])
@@ -55,8 +51,7 @@ def animate_solution(x, times, thetas, title="Animation",
     ax.grid(True)
 #update means the plot is updated at each different time
 #changes the title to show the time
-
-def update(frame):
+    def update(frame):
         line.set_data(x, thetas[frame, :])
         ax.set_title(f"{title} — t = {times[frame]:.0f} s")
         return line,
