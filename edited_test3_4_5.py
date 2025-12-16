@@ -2,7 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from pde_grids import build_grid, run_model, plot_profiles
+from pde_grids import build_grid, run_model
+from initials_conditions import plot_profiles
+# =========================
+# Global simulation parameters
+# =========================
+L = 20.0        # domain length [m]
+T_end = 300.0   # total simulation time [s]
+dx = 0.2        # spatial step [m]
+dt = 10.0       # time step [s]
+
+U_base = 0.1    # base velocity [m/s]
+STORE_EVERY = 10
+
+OUTPUT_DIR = "Results"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 #test case 3(test how the sensitivity are to the parameters)
 #(U, spatial and temporal resolution)
 #starting from the sensitivity of U
@@ -24,7 +38,7 @@ for U in velocity:
     #storing the first and last file 
     times_u, thetas_u = run_model(
         x_u, t_u, theta_init, U, inlet_velocityBC,
-        store_every3=Nt_u - 1
+        store_every = Nt_u - 1
     )
 
     #plotting set up
@@ -117,30 +131,42 @@ times4, thetas4 = run_model(x4, t4, theta4_initial, U_base, decaying_inlet, stor
 plot_profiles(x4, times4, thetas4, title_prefix="Test 4 – exponentially decaying inlet", save_path=os.path.join(OUTPUT_DIR, "test4_profiles.png"))
 
 print ("done test case 4")
+# -----------------------------
+# Test case 5: variable velocity
+# -----------------------------
+
+# build grid for test case 5
+x5, t5, Nx5, Nt5 = build_grid(L, T_end, dx, dt)
 
 #test case 5: how variable stream velocity profile alters the results(ten percent random perturbation)
 
 #create a spatially varying velocity profile around the base velocity
 rng = np.random.default_rng(123) 
-variable_U = U_base * (1 + 0.1 * (2 * rng.random(Nx) - 1))
+variable_U = U_base * (1 + 0.1 * (2 * rng.random(Nx5) - 1))
 
 #set up nitial condition
-theta5_initial = np.zeros(Nx)
+theta5_initial = np.zeros(Nx5)
 theta5_initial[0] = 250.0
 
 #set up inlet boundry condition
 def inlet_test5(time):return 250.0
 
 #simulation and run model with varying velocity
-t5_var, th5_var = run_model(x, t, theta5_initial, variable_U, inlet_test5, store_every=STORE_EVERY)
+t5_var, th5_var = run_model(
+    x5, t5, theta5_initial, variable_U, inlet_test5, 
+    store_every=STORE_EVERY
+)
 
 #simulation and run model with uniform velocity
-t5_const, th5_const = run_model(x, t, theta5_initial, U_base, inlet_test5, store_every=STORE_EVERY)
+t5_const, th5_const = run_model(
+    x5, t5, theta5_initial, U_base, inlet_test5,
+    store_every=STORE_EVERY
+)
 
 #plot set up
 plt.figure(figsize=(8, 5))
-plt.plot(x, th5_const[-1], label="constant U")
-plt.plot(x, th5_var[-1], label="variable U(x)")
+plt.plot(x5, th5_const[-1], label="constant U")
+plt.plot(x5, th5_var[-1], label="variable U(x)")
 plt.xlabel("Distance x [m]")
 plt.ylabel("Concentration θ [µg/m³]")
 plt.title("Test 5 – comparison of constant vs variable velocity")
