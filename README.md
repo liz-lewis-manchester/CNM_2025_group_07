@@ -17,6 +17,7 @@ The model is implemented in Python using finite difference methods and produces 
 ---
 
 ## Repository Structure
+- `TestCase12.py` - Test cases 1 & 2
 - `edited_test3_4_5.py` – Test cases 3, 4, and 5
 - `Initial Plot.py` – Initial plotting utilities
 - `initial_conditions.csv` – Provided initial concentration data
