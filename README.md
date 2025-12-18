@@ -21,7 +21,7 @@ The model is implemented in Python using finite difference methods and produces 
 - `edited_test3_4_5.py` – Test cases 3, 4, and 5
 - `Initial Plot.py` – Initial plotting utilities
 - `initial_conditions.csv` – Provided initial concentration data
-- `initial_conditions.py` / `initials_conditions.py` – Initial condition handling
+- `initial_conditions.py` – Initial condition handling
 - `pde_grids.py` – Grid setup and numerical solver functions
 - `Results/` – Output figures and animations
 - `README.md` – Project documentation
